@@ -1,0 +1,20 @@
+{
+  "name": "easier-auth",
+  "version": "1.0.0",
+  "description": "Secure authentication shouldn't be difficult",
+  "homepage": "https://github.com/ethrythedev/node-easier-auth#readme",
+  "bugs": {
+    "url": "https://github.com/ethrythedev/node-easier-auth/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethrythedev/node-easier-auth.git"
+  },
+  "license": "MIT",
+  "author": "ethrythedev",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
