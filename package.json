@@ -1,6 +1,6 @@
 {
   "name": "easier-auth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Secure authentication shouldn't be difficult",
   "homepage": "https://github.com/ethrythedev/node-easier-auth#readme",
   "bugs": {
@@ -10,6 +10,13 @@
     "type": "git",
     "url": "git+https://github.com/ethrythedev/node-easier-auth.git"
   },
+  "keywords": [
+    "express",
+    "passport",
+    "auth",
+    "authn",
+    "authentication"
+  ],
   "license": "MIT",
   "author": "ethrythedev",
   "type": "commonjs",
