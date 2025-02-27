@@ -1,6 +1,6 @@
 {
   "name": "easier-auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Secure authentication shouldn't be difficult",
   "homepage": "https://github.com/ethrythedev/node-easier-auth#readme",
   "bugs": {
