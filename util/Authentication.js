@@ -156,6 +156,77 @@ class Authentication {
 
         return Boolean(exists);
     }
+
+    /**
+     * Get user ID from DB by session ID
+     * 
+     * @param {*} sid Session ID (XXX)
+     * @returns {Promise<string | boolean>}
+     * 
+     * @example
+     * getUserIdFromSessionId("XXX")
+     *  .then((info) => console.log(info))
+     *  .catch((err) => console.error(err))
+     */
+    async getUserIdFromSessionId(sid) {
+        if(!this.knex) throw new Error("Knex hasn't been initiated in the AuthService class.");
+        if(!sid) throw new Error("Session ID must be provided");
+
+        const sidMatch = await this.knex("sessions")
+            .where({session_id: sid})
+            .first();
+
+        if(sidMatch) {
+            return sidMatch.uuid;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Middleware function to verify authentication token.
+     * @param {import('express').Request} req - Express request object.
+     * @param {import('express').Response} res - Express response object.
+     * @param {import('express').NextFunction} next - Express next function.
+     * 
+     * @example
+     * app.use(middleware())
+     */
+    async express_middleware(req, res, next) {
+        try {
+            // get token and verify it
+            const token = req.headers.authorization?.split(" ")[1];
+
+            if (!token || !(await this.verifyToken(token))) {
+                return res.status(401).json({ message: "Unauthorized" });
+            }
+
+            const [auth_sid, auth_tok] = token.split(".");
+
+            const confirmedUuid = await this.getUserIdFromSessionId(auth_sid);
+
+            // get user info
+            const [user] = await this.knex("users")
+                .select("username", "password")
+                .where("uuid", confirmedUuid);
+
+            // if user doesnt exist, send error
+            if(!user) {
+                return res.status(401).json({ message: "Unauthorized" });
+            }
+
+            // provide these variables:
+            req.eauth = {};
+            req.eauth.user = {};
+            req.eauth.user.username = user.username;
+            req.eauth.user.id = confirmedUuid;
+            req.eauth.user.token = token;
+
+            next();
+        } catch (error) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+    }
 }
 
 module.exports = Authentication;
