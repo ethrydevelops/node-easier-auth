@@ -34,7 +34,7 @@ class Authentication {
         const password = await bcrypt.hash(pwdUnhashed, 10);
 
         if(await this.userExists(username)) {
-            throw new Error("User with this username already exists"); // TODO: handle gracefully
+            return { error: "An account with this username already exists" };
         }
 
         await this.knex("users").insert({
@@ -42,6 +42,8 @@ class Authentication {
             username,
             password
         });
+
+        return { success: true };
     }
 
     /**
