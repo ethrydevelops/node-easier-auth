@@ -31,7 +31,7 @@ class Authentication {
         if(!username || !pwdUnhashed) throw new Error("Username and password must be provided");
 
         const uuid = uuidv4();
-        const password = await bcrypt.hash(pwdUnhashed, 10);
+        const password = await bcrypt.hash(pwdUnhashed, 12); // TODO: make rounds configurable in constructor
 
         if(await this.userExists(username)) {
             return { error: "An account with this username already exists" };
