@@ -3,6 +3,9 @@ Authentication shouldn't be difficult. Add secure authentication to your site in
 
 Passwords are automatically hashed with bcrypt. Easier-auth also includes an Express middleware to validate routes easily.
 
+> [!NOTE]  
+> easier-auth does not provide or enforce password complexity or strength validation, etc. For optimal security, your application shouldn't accept just any password.
+
 ## Installation
 
 ### Prerequisites:
