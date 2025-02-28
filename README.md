@@ -71,7 +71,7 @@ async function loginToAccount(user, pass) {
     });
     ```
 
-4. Token hashing is included by default. **If you find that logging in or verifying tokens is too slow,** you may want to disable hashing. You can do this with the code below.
+4. Token hashing is included by default. **If you find logging in or verifying tokens to be slow,** you may want to disable hashing. You can do this with the code below.
 
     This should shave off ~50-150ms (depending on host machine) of time during token verification, although it might be less secure:
 
