@@ -3,8 +3,15 @@ const { v4: uuidv4 } = require('uuid');
 const crypto = require("crypto");
 
 class Authentication {
-    constructor(knex) {
+    /**
+     * Create a new authentication object
+     * 
+     * @param {*} knex Your knex object
+     * @param {boolean} [tokenHashing] Should tokens be hashed when they're stored in the database? It's recommended to keep this on unless your application is particularly time-sensitive.
+     */
+    constructor(knex, tokenHashing = true) {
         this.knex = knex;
+        this.tokenHashing = tokenHashing;
     }
 
     /**
@@ -27,7 +34,7 @@ class Authentication {
         const password = await bcrypt.hash(pwdUnhashed, 10);
 
         if(await this.userExists(username)) {
-            throw new Error("User with this username already exists");
+            throw new Error("User with this username already exists"); // TODO: handle gracefully
         }
 
         await this.knex("users").insert({
@@ -72,7 +79,14 @@ class Authentication {
         // generate stuff
         const sid = crypto.randomBytes(8).toString("hex");
         const token = crypto.randomBytes(30).toString("hex");
-        const tokenHash = await bcrypt.hash(token, 10); // store hashed token in DB
+
+        let tokenHash;
+        if(this.tokenHashing) {
+            tokenHash = await bcrypt.hash(token, 10); // store hashed token in DB
+        } else {
+            // token hashing disabled
+            tokenHash = token;
+        }
 
         // register session in the sessions table
         await this.knex("sessions").insert({
@@ -111,7 +125,11 @@ class Authentication {
 
         const matchTokenHash = sidMatch.token;
 
-        return Boolean(await bcrypt.compare(tok, matchTokenHash));
+        if(this.tokenHashing) {
+            return Boolean(await bcrypt.compare(tok, matchTokenHash));
+        } else {
+            return Boolean(tok == matchTokenHash);
+        }
     }
 
     /**
